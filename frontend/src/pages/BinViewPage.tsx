@@ -24,14 +24,16 @@ const BinViewPage = () => {
   const [requests, setRequests] = useState(mockBin.requests);
 
   useEffect(() => {
-    if (!binRoute) return;
-    const token = localStorage.getItem(`basket_${binRoute}`);
-    if (!token) return;
-    getBin(binRoute, token).then((data) => {
+    // if (!binRoute) return;
+    // const token = localStorage.getItem(`basket_${binRoute}`);
+    // if (!token) return;
+    getBin(binRoute, "").then((data) => {
       setBin(data);
       setRequests(data.requests);
-    });
-  }, []);
+    }).catch((error) => {
+    console.error("getBin failed:", error);
+  });
+}, []);
 
   return (
     <section>
