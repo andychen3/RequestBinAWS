@@ -18,16 +18,6 @@ app.use(express.urlencoded({ extended: true, verify: captureRaw }));
 app.use(express.text({ verify: captureRaw }));
 app.use(express.raw({ type: '*/*', verify: captureRaw }));
 
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.log(err);
-
-  if (err instanceof ApiError) {
-    return res.status(err.status).json({ error: err.message });
-  }
-
-  return res.status(500).json({ error: "Internal server error" });
-});
-
 // create bin
 app.post('/bins', async (req: Request, res: Response) => {
   const { bin_route } = req.body ?? {};
@@ -58,6 +48,16 @@ app.delete('/bins/:binRoute', async (req, res) => {
 
   await deleteBin(binRoute, req);
   res.sendStatus(204);
+});
+
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.log(err);
+
+  if (err instanceof ApiError) {
+    return res.status(err.status).json({ error: err.message });
+  }
+
+  return res.status(500).json({ error: "Internal server error" });
 });
 
 export default app;
